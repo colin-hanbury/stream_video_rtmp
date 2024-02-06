@@ -1,5 +1,7 @@
 group 'com.streamvideortmp.stream_video_rtmp'
 version '1.0'
+def args = ["-Xlint:deprecation","-Xlint:unchecked"]
+
 
 buildscript {
     repositories {
@@ -8,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 
@@ -16,34 +18,47 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
+
     }
 }
+
+project.getTasks().withType(JavaCompile){
+    options.compilerArgs.addAll(args)
+}
+
 
 apply plugin: 'com.android.library'
 
 android {
+    buildFeatures {
+        buildConfig true
+    }
     if (project.android.hasProperty("namespace")) {
         namespace 'com.streamvideortmp.stream_video_rtmp'
     }
 
-    compileSdkVersion 33
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 23
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+        disable 'AndroidGradlePluginVersion', 'InvalidPackage', 'GradleDependency'
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    defaultConfig {
-        minSdkVersion 19
-    }
-
-    dependencies {
-        testImplementation 'junit:junit:4.13.2'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
-    }
-
     testOptions {
         unitTests.all {
+            jvmArgs "-Xmx1g"
             testLogging {
                events "passed", "skipped", "failed", "standardOut", "standardError"
                outputs.upToDateWhen {false}
@@ -51,4 +66,11 @@ android {
             }
         }
     }
+}
+dependencies {
+    implementation 'com.github.pedroSG94.RootEncoder:library:2.2.7'
+    implementation 'androidx.annotation:annotation:1.7.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
+    testImplementation 'androidx.test:core:1.4.0'
 }

@@ -18,7 +18,7 @@ public class StreamVideoRtmpPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "stream_video_rtmp");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "rtmp_camera");
     channel.setMethodCallHandler(this);
   }
 
